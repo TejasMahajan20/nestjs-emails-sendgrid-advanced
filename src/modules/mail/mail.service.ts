@@ -1,37 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { SendGridClient } from './sendgrid-client';
-import { MailDataRequired } from '@sendgrid/mail';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { QueueName } from './enums/queue-name.enum';
+import { JobName } from './enums/job-name.enum';
 
 @Injectable()
 export class MailService {
-    constructor(private readonly sendGridClient: SendGridClient) { }
+    constructor(
+        @InjectQueue(QueueName.MAIL) private mailQueue: Queue
+    ) { }
 
     async sendTestEmail(
-        recipient: string,
-        subject: string = 'Test email',
-        body: string = 'This is a test mail'
+        recipient: string
     ): Promise<void> {
-        const mail: MailDataRequired = {
-            to: recipient,
-            from: process.env.SENDGRID_SENDER_EMAIL_ID,
-            subject,
-            content: [{ type: 'text/plain', value: body }],
-        };
-        await this.sendGridClient.send(mail);
+        await this.mailQueue.add(
+            JobName.MAIL,
+            {
+                recipient,
+            }
+        );
     }
 
     async sendEmailWithTemplate(
-        templateId: string,
-        recipient: string,
-        subject: string = 'Test email with template',
-        body: string = 'This is a test mail with template'
+        recipient: string
     ): Promise<void> {
-        const mail: MailDataRequired = {
-            to: recipient,
-            from: process.env.SENDGRID_SENDER_EMAIL_ID,
-            templateId,
-            dynamicTemplateData: { body, subject }, // The data to be used in the template
-        };
-        await this.sendGridClient.send(mail);
+        await this.mailQueue.add(
+            JobName.TEMPLATE_MAIL,
+            {
+                templateId : process.env.SENDGRID_OTP_TEMPLATE_ID,
+                recipient,
+            }
+        );
     }
 }

@@ -1,9 +1,17 @@
 import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { SendGridClient } from './sendgrid-client';
+import { BullModule } from '@nestjs/bullmq';
+import { QueueName } from './enums/queue-name.enum';
+import { MailConsumer } from './mail.consumer';
 
 @Module({
-  providers: [MailService, SendGridClient],
+  imports: [
+    BullModule.registerQueue({
+      name: QueueName.MAIL,
+    })
+  ],
+  providers: [MailService, SendGridClient, MailConsumer],
   exports: [MailService]
 })
 export class MailModule { }

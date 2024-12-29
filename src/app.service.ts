@@ -4,7 +4,7 @@ import { MailService } from './modules/mail/mail.service';
 @Injectable()
 export class AppService {
   constructor(
-    private readonly mailService: MailService
+    private readonly mailService: MailService,
   ) { }
 
   getHello(): string {
@@ -16,6 +16,6 @@ export class AppService {
   }
 
   async sendEmailWithTemplate(email: string): Promise<void> {
-    await this.mailService.sendEmailWithTemplate(process.env.SENDGRID_OTP_TEMPLATE_ID, email)
+    await this.mailService.sendEmailWithTemplate(email)
   }
 }

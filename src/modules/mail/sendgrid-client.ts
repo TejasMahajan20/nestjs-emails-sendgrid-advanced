@@ -15,8 +15,9 @@ export class SendGridClient {
       await SendGrid.send(mail);
       this.logger.log(`Email successfully dispatched to: ${mail.to as string}`);
     } catch (error) {
-      this.logger.error('Error while sending email', error);
-      throw error;
+      this.logger.error(`Error while sending email to :${mail.to as string}`);
+      console.log(error);
+      // throw error;
     }
   }
 }

@@ -1,10 +1,10 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
-import { QueueName } from './enums/queue-name.enum';
+import { QueueName } from '../../common/enums/queue-name.enum';
 import { SendGridClient } from './sendgrid-client';
 import { MailDataRequired } from '@sendgrid/mail';
-import { JobName } from './enums/job-name.enum';
+import { EmailJobName } from './enums/email-job-name.enum';
 
 @Processor(QueueName.MAIL)
 export class MailConsumer extends WorkerHost {
@@ -17,10 +17,10 @@ export class MailConsumer extends WorkerHost {
     async process(job: Job<any, any, string>): Promise<any> {
         const { recipient, templateId } = job.data;
         switch (job.name) {
-            case JobName.MAIL:
+            case EmailJobName.MAIL:
                 await this.sendTestEmail(recipient);
                 break;
-            case JobName.TEMPLATE_MAIL:
+            case EmailJobName.TEMPLATE_MAIL:
                 await this.sendEmailWithTemplate(templateId, recipient);
                 break;
             default:

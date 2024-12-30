@@ -3,7 +3,7 @@ import { MailDataRequired, default as SendGrid } from '@sendgrid/mail';
 
 @Injectable()
 export class SendGridClient {
-  private logger = new Logger(SendGridClient.name);
+  private readonly logger = new Logger(SendGridClient.name);
   
   constructor() {
     //Get the API key from config service or environment variable

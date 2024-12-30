@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { SendGridClient } from './sendgrid-client';
 import { BullModule } from '@nestjs/bullmq';
-import { QueueName } from './enums/queue-name.enum';
+import { QueueName } from '../../common/enums/queue-name.enum';
 import { MailConsumer } from './mail.consumer';
 
 @Module({
